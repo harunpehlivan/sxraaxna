@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Facebook OpenGraph developers.facebook.com/docs/reference/opengraph/ --> 
+<meta property="og:type" content="website"> 
+<meta property="og:title" content="HTML and CSS List Designer"> 
+<meta property="og:description" content="Design ordered and unordered lists interactively, then copy / paste the CSS3 code to your style sheet."> 
+<meta property="og:url" content="https://alansimpson.me/html_css/tools/lists/"> 
+<meta property="og:image" content="https://alansimpson.me/html_css/tools/lists/listsog.jpg"> 
+
+<!-- Twitter domain approval dev.twitter.com/docs/cards/validation/validator --> 
+<!-- For twitter, content is usually summary_large_image as shown --> 
+<meta name="twitter:card" content="summary_large_image"> 
+<meta name="twitter:title" content="HTML and CSS List Designer"> 
+<meta name="twitter:description" content="Design ordered and unordered lists interactively, then copy / paste the CSS3 code to your style sheet."> 
+<meta name="twitter:url" content="https://alansimpson.me/html_css/tools/lists/"> 
+<meta name="twitter:image" content="https://alansimpson.me/html_css/tools/lists/listsog.jpg"> 
+
+<!-- Shema.org microdata --> 
+<meta itemprop="name" content="HTML and CSS List Designer"> 
+<meta itemprop="description" content="Design ordered and unordered lists interactively, then copy / paste the CSS3 code to your style sheet."> 
+<meta itemprop="image" content="https://alansimpson.me/html_css/tools/lists/listsog.jpg"> 
+
+    <?php $IPATH = $_SERVER["DOCUMENT_ROOT"]."/assets/php/"; 
+        include($IPATH."meta.html"); ?>
+    <title>HTML List Formatter</title>
+    <style>
+        #container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            align-items: flex-start;
+        }
+
+        table.controls {
+            border-collapse: collapse;
+            width: 455px;
+            border: solid 1px silver;
+        }
+
+        table.controls tr:nth-child(odd) {
+            background-color: #eee;
+        }
+
+        table.controls td:nth-child(1) {
+            text-align: right;
+            padding: 0;
+            width: 210px;
+
+        }
+
+        table.controls td:nth-child(2) {
+            text-align: center;
+            padding: 0;
+            width: 250px;
+        }
+
+
+        #preview {
+            border: solid 1px silver;
+            padding: 8px;
+            width: 350px;
+        }
+
+        #csscode {
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1;
+            background: #eee;
+            padding: 8px;
+            border: solid 1px silver;
+            box-shadow: 2px 20x 2px gray;
+            border-radius: 3px;
+            width: 400px;
+
+
+        }
+
+        ol,
+        ul {
+            margin-left: initial;
+            list-style-position: initial;
+            text-align: initial;
+        }
+
+        ol {
+            list-style: decimal;
+        }
+
+        ul {
+            list-style: disc;
+        }
+
+        ol li,
+        ul li {
+            padding-left: initial;
+            padding-bottom: initial;
+        }
+    </style>
+    <!-- Empty style sheet gets populated by JavaScript (maybe) later -->
+
+    <style>
+        body {
+            color: black;
+        }
+    </style>
+
+</head>
+
+<body>
+    <?php include($IPATH."headernav.html"); ?>
+    <article>
+        <h1>Style Lists</h1>
+        <p>Use the controls below to style unordered and ordered lists. When you see a format you like, copy / paste the CSS
+            code into your style sheet.</p>
+        <div id="container">
+            <div id="left">
+                <table class="controls">
+                    <tr>
+                        <td>List Left Margin:</td>
+                        <td>
+                            <input type="range" id="margin" min="-60" max="60" oninput="showit()" onchange="showit()" value="0" /> </td>
+                    </tr>
+                    <tr>
+                        <td>List Alignment:</td>
+                        <td>
+                            <input name="alignment" type="radio" id="rbLeft" value="left" onchange="showit()" checked>
+                            <label for="rbLeft">Left</label>&nbsp;&nbsp;
+                            <input name="alignment" type="radio" id="rbCenter" value="center" onchange="showit()">
+                            <label for="rbCenter">Center</label>&nbsp;&nbsp;
+                            <input name="alignment" type="radio" id="rbRight" value="right" onchange="showit()">
+                            <label for="rbRight">Right</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>List Marker Positions:</td>
+                        <td>
+                            <input name="position" type="radio" id="rbOutside" value="outside" onchange="showit()" checked>
+                            <label for="rbOutside">Outside</label>&nbsp;&nbsp;
+                            <input name="position" type="radio" id="rbInside" value="inside" onchange="showit()">
+                            <label for="rbInside">Inside</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>List Item Left Padding:</td>
+                        <td>
+                            <input type="range" id="padding" min="0" max="60" oninput="showit()" onchange="showit()" value="0" /> </td>
+                    </tr>
+                    <tr>
+                        <td>List Item Bottom Padding:</td>
+                        <td>
+                            <input type="range" id="bottompadding" min="0" max="60" oninput="showit()" onchange="showit()" value="0" /> </td>
+                    </tr>
+                    <tr>
+                        <td>Unordered List Style:</td>
+                        <td style="text-align:left;padding-left:10px;">
+                            <select id="umarkers" onchange="showit()">
+                                <option value="circle">Circle</option>
+                                <option value="disc" selected>Disc</option>
+                                <option value="none">None</option>
+                                <option value="square">Square</option>
+                                <option value="\1F642   "> &#128578;</option>
+                                <option value="\1F600   "> &#128512;</option>
+                                <option value="\1F60A   "> &#128522;</option>
+                                <option value="\1F44D   "> &#128077;</option>
+                                <option value="\2611   "> &#9745;</option>
+                                <option value="\2714   "> &#10004;</option>
+                                <option value="\25FC   "> &#9724;</option>
+                                <option value="\2610   "> &#9744;</option>
+                                <option value="\263A   "> &#9786;</option>
+                                <option value="\270E   "> &#9998;</option>
+                                <option value="\2764   "> &#10084;</option>
+                                <option value="\2730   "> &#10032;</option>
+                                <option value="\2605   "> &#9733;</option>
+                                <option value="\27A4   "> &#10148;</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ordered List Style:</td>
+                        <td style="text-align:left;padding-left:10px;">
+                            <select id="omarkers" onchange="showit()">
+                                <option value="armenian">Armenian</option>
+                                <option value="decimal" selected>Decimal</option>
+                                <option value="decimal-leading-zero">Decimal Leading Zero</option>
+                                <option value="georgian">Georgian</option>
+                                <option value="hebrew">Hebrew</option>
+                                <option value="lower-alpha">Lower Alpha</option>
+                                <option value="upper-alpha">Upper Alpha</option>
+                                <option value="lower-greek">Lower Greek</option>
+                                <option value="lower-greek">Upper Greek</option>
+                                <option value="lower-latin ">Lower Latin </option>
+                                <option value="upper-latin ">Upper Latin</option>
+                                <option value="lower-roman">Lower Roman</option>
+                                <option value="upper-roman">Upper Roman</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="right">
+                <div id="preview">
+                    <p style="margin-top:0">This is standard paragraph text near the list so you can style relative to this neighboring.</p>
+                    <ul id="sample1">
+                        <li>Unordered list item the first.</li>
+                        <li>Unordered list item the second.</li>
+                        <li>Unordered list item the third.</li>
+                    </ul>
+                    <ol id="sample2">
+                        <li>Ordered list item the first.</li>
+                        <li>Ordered list item the second.</li>
+                        <li>Ordered list item the third.</li>
+                    </ol>
+                    <p style="margin-bottom:0">This is standard paragraph text near the list so you can style relative to this neighboring.</p>
+                </div>
+            </div>
+        </div>
+        <!-- End container -->
+        <div id="belowcontainer">
+            <p>Use the CSS code below for styling</p>
+            <div id="csscode">
+                ol,ul{
+                <br>&nbsp;&nbsp;margin:
+                <span id="margincode">initial;</span>
+                <br>&nbsp;&nbsp;text-align:
+                <span id="textaligncode">initial;</span>
+                <br>&nbsp;&nbsp;list-style-position:
+                <span id="positioncode">initial;</span>
+                <br>}
+                <br>
+                <br>ul{
+                <br>&nbsp;&nbsp; list-style-type:
+                <span id="ulstyle">disc;</span>
+                <br>}
+                <span id="hiddenstyle1"></span>
+                <br>ol{
+                <br>&nbsp;&nbsp;&nbsp;list-style-type:
+                <span id="olstyle">decimal;</span>
+                <br>}
+                <br>
+                <br>ol li, ul li{
+                <br>&nbsp;&nbsp;&nbsp;padding-left:
+                <span id="paddingcode">initial;</span>
+                <br>&nbsp;&nbsp;&nbsp;padding-bottom:
+                <span id="bottompaddingcode">initial;</span>
+                <br>}
+            </div>
+            <script>
+                function showit() {
+
+                    var margins = document.getElementById("margin").value + "px "
+                    var alignment = document.querySelector('input[name="alignment"]:checked').value;
+                    var position = document.querySelector('input[name="position"]:checked').value;
+                    var padding = document.getElementById("padding").value + "px "
+                    var bottompadding = document.getElementById("bottompadding").value + "px "
+                    var list1 = document.getElementById("sample1");
+                    var list2 = document.getElementById("sample2");
+                    sample1.style.marginLeft = margins;
+                    sample2.style.marginLeft = margins;
+                    document.getElementById("margincode").innerText = margins + ";";
+                    sample1.style.textAlign = alignment;
+                    sample2.style.textAlign = alignment;
+                    document.getElementById("textaligncode").innerText = alignment + ";";
+                    sample1.style.listStylePosition = position;
+                    sample2.style.listStylePosition = position;
+                    document.getElementById("positioncode").innerText = position + ";";
+                    var listitems = document.getElementsByTagName("li");
+                    for (i = 0; i < listitems.length; i++) {
+                        listitems[i].style.paddingLeft = padding;
+                        listitems[i].style.paddingBottom = bottompadding;
+                    }
+                    document.getElementById("paddingcode").innerText = padding + ";";
+                    document.getElementById("bottompaddingcode").innerText = bottompadding + ";";
+                    //unordered list dropdown
+                    var umarkers = document.getElementById("umarkers");
+                    var uchoice = umarkers.options[umarkers.selectedIndex].value;
+                    var sheet = document.styleSheets[2];
+                    try {
+                        sheet.deleteRule(0)
+                    } catch (err) {
+                        //do notthing
+                    }
+                    if (uchoice.charAt(0) == '\\') {
+                        sample1.style.listStyleType = 'none';
+                        document.getElementById("ulstyle").innerText = "none;";
+                        document.getElementById("hiddenstyle1").innerHTML =
+                            "<br>ul li:before{<br>&nbsp;&nbsp;content: '" + uchoice +
+                            "'<br>}<br>";
+
+                        var newrule = "#sample1 li::before {content: '" + uchoice + "'}";
+                        sheet.insertRule(newrule, 0);
+                    } else {
+                        sample1.style.listStyleType = uchoice;
+                        document.getElementById("ulstyle").innerText = uchoice + ";";
+                        document.getElementById("hiddenstyle1").innerHTML = "";
+                    }
+                    var omarkers = document.getElementById("omarkers");
+                    var ochoice = omarkers.options[omarkers.selectedIndex].value;
+                    sample2.style.listStyleType = ochoice;
+                    document.getElementById("olstyle").innerText = ochoice + ";";
+                }
+            </script>
+    </article>
+    <?php include($IPATH."footer.html"); ?>
+</body>
+
+</html>
